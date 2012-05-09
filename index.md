@@ -40,7 +40,7 @@ __Step 1__ : Download __steal.js__ and copy it into the static folder so the "st
 __Step 2__ : In `todo.html`, add a script tag that loads steal and add a "data-main" attribute
 that points to `todo.js` relative to `steal.js` like:
 
-{% highlight %}
+{% highlight html %}
 <!DOCTYPE html>
 <html>
     <head>
