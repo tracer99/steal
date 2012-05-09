@@ -11,10 +11,11 @@ applications easy. It provides:
  - [steal\(\)](#steal) - dependency management for JS, CSS, LESS, CoffeeScript + more.
  - [steal build](#build) - Fast loading (minified, concatenated, progressive) application builds
  - [steal crawl](#crawl) - Search-ability for your ajax apps
- - [steal clean](#clean) Source cleaning / linting
- - [steal generate](#generate) Boilerplate code generators
- - [steal.instrument](#instrument) Instrumentation for code coverage
- - [steal pluginify] Release code that doesn't use steal
+ - [steal clean](#clean) - Source cleaning / linting
+ - [steal generate](#generate) - Boilerplate code generators
+ - [steal pluginify] - Release code that doesn't use steal
+ - [steal.instrument](#instrument) - Instrumentation for code coverage
+ - [steal.amd](#amd) - AMD support for steal
 
 ## Get StealJS
 
