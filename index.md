@@ -20,14 +20,22 @@ applications easy. It provides:
 ## Get StealJS
 
 StealJS is comprised of 2 main parts - `steal.js` (dependency management) 
-and `s.js` (everything else).
+and `steal` (command line tools).  There several different ways to install
+StealJS, but we'll highlight the best / easist here:
 
+### Install steal
 
-## steal `steal( resources..., [callback] )`
+First, install node.  Then run
 
-The core dependency management part of StealJS is `steal`.
+    > npm install -g steal
+    
+You should be able to run steal anywhere.  You might have to run `sudo`.  Try it:
 
-### Installing
+    > steal
+    
+Now you can run all of steal's command lines.  Now lets setup the dependency management part.
+
+### Install steal.js
 
 This example setup assumes you keep your JavaScript and CSS files in a "static" directory
 in your project.  In this case, for a basic todo app, your directory layout might look like:
@@ -40,7 +48,7 @@ in your project.  In this case, for a basic todo app, your directory layout migh
       - helper/
          - util.js 
 
-__Step 1__ : Download __steal.js__ and copy it into the static folder so the "static" folder looks like:
+Download __steal.js__ and copy it into the static folder so the "static" folder looks like:
 
  - todo-app/
    - todo.html
@@ -51,7 +59,13 @@ __Step 1__ : Download __steal.js__ and copy it into the static folder so the "st
       - helper/
          - util.js 
 
-__Step 2__ : In `todo.html`, add a script tag that loads steal and add a "data-main" attribute
+You could also use the generator to do this for you like:
+
+    > steal generate steal.js path/to/todo-app/static
+
+### Load steal.js
+
+In `todo.html`, add a script tag that loads steal and add a "data-main" attribute
 that points to `todo.js` relative to `steal.js` like:
 
 {% highlight html %}
@@ -67,7 +81,9 @@ that points to `todo.js` relative to `steal.js` like:
 </html>
 {% endhighlight %}
 
-__Step 3__: Inside of `todo.js`, use `steal( path, ... )` to load any scripts and css you need to run:
+### steal something
+
+Inside of `todo.js`, use `steal( path, ... )` to load any scripts and css you need to run:
 
 {% highlight javascript %}
 steal('todo.css','helper/util.js', function(){
@@ -77,13 +93,19 @@ steal('todo.css','helper/util.js', function(){
 })
 {% endhighlight %}
 
+## steal `steal( resources..., [callback] )`
+
+The core dependency management part of StealJS is `steal`.
+
+
+
 ### Loading scripts and css
 
 ### Configuring
 
 ### Other Types
 
-### AMD
+
 
 
 ## build `steal build [OPTS] filename.js`
