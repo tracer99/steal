@@ -22,7 +22,7 @@ StealJS is comprised of 2 main parts - `steal.js` (dependency management)
 and `s.js` (everything else).
 
 
-## steal `steal( [resources ...], [callback] )`
+## steal `steal( resources..., [callback] )`
 
 The core dependency management part of StealJS is `steal`.
 
@@ -96,15 +96,19 @@ JavaScript and CSS file extremely easy.  Features:
 
 	js steal/buildjs mypage.html
 
-## log `steal.log()`
+## crawl `steal crawl [OPTS] website.html`
 
-*steal.dev* logs messages cross browser.  Messages are removed in production builds.
+*steal.html* makes Google-crawlable html from your ajax app.
 
-{% highlight javascript %}
-steal.dev.log('something is happening');
-{% endhighlight %}
+	js steal/htmljs http://localhost/cookbook.html#recipes
 
-## Code Generators
+## clean `steal crawl [OPTS] filename.js`
+
+*steal.clean* cleans your code and checks it against JSLint.
+
+	js steal/clean path/to/page.html
+
+## generate `steal generate path/to/boilerplate boilerplate`
 
 *steal.generate* makes building code generators extremely easy.  Features:
 
@@ -113,23 +117,24 @@ steal.dev.log('something is happening');
 
 	js jquery/generate/app cookbook
 
-## Package Management
+## pluginify `steal pluginify [OPTS] filename.js`
 
-*steal.get* is a simple JavaScript version of [ruby gems](http://rubygems.org/) featuring:
+blah
 
-- Download and install plugins from remote SVN or GIT repositories.
-- Installs dependencies.
+## instrument `steal('steal/instrument')`
 
-	js steal/getjs http://github.com/jupiterjs/mxui/
+Blah
 
-## Code Cleaner
+## log `steal.log()`
 
-*steal.clean* cleans your code and checks it against JSLint.
+*steal.dev* logs messages cross browser.  Messages are removed in production builds.
 
-	js steal/clean path/to/page.html
+{% highlight javascript %}
+steal.dev.log('something is happening');
+{% endhighlight %}
 
-## Searchable Ajax Apps
+## amd `require()` `define()`
 
-*steal.html* makes Google-crawlable html from your ajax app.
 
-	js steal/htmljs http://localhost/cookbook.html#recipes
+
+
