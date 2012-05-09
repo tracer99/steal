@@ -9,18 +9,68 @@ that make building, packaging, and sharing JavaScript applications easy.
 
 Behold StealJS's goodies:
 
-## Dependency Management
+## Dependency Management `steal()`
 
-StealJS loads JS and other file into your app.  Features:
+The core dependency management part of StealJS is `steal`.
 
- - Loads JavaScript, CSS, Less, CoffeeScript, and a variety of client-side templates.
- - Can be use with scripts that don't use steal.
+### Installing
+
+This example setup assumes you keep your JavaScript and CSS files in a "static" directory
+in your project.  In this case, for a basic todo app, your directory layout might look like:
+
+ - todo-app/
+   - todo.html
+   - static
+       - todo.js
+       - todo.css
+       - helper/
+          - util.js 
+
+__Step 1__ : Download __steal.js__ and copy it into the static folder so the "static" folder looks like:
+
+ - todo-app/
+   - todo.html
+   - static
+       - __steal.js__
+       - todo.js
+       - todo.css
+       - helper/
+          - util.js 
+
+__Step 2__ : In `todo.html`, add a script tag that loads steal and add a "data-main" attribute
+that points to `todo.js` relative to `steal.js` like:
+
+{% highlight html %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Todos</title>
+    </head>
+    <body>
+        <h1>My Sample Project</h1>
+        <script data-main="todo.js" src="static/steal.js"></script>
+    </body>
+</html>
+{% endhighlight %}
+
+__Step 3__: Inside of `todo.js`, use `steal( path, ... )` to load any scripts and css you need to run:
 
 {% highlight javascript %}
-steal('widgets/tabs.js', './style.css', function(){
-  $('#tabs').tabs();
-});
+steal('todo.css','helper/util.js', function(){
+  // this function is called after todo.css and helper/util.js have finished loading
+  // if util.js itself has steals, this function will wait until those are also 
+  // complete
+})
 {% endhighlight %}
+
+### Loading scripts and css
+
+### Configuring
+
+### Other Types
+
+### AMD
+
 
 ## JS/CSS Compression
 
