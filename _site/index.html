@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+<head>
+<title>jQuery++</title>
+<link rel="stylesheet" type="text/css" href="stylesheets/styles.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/tango.css">
+<link href='/favicon.ico' rel='shortcut icon' type='image/x-icon' />
+</head>
+<body>
+<div id='bg'>
+</div>
+<div class='cf' id='wrapper'>
+	<div id='menu-wrapper'>
+		<div id='header'>
+			<div id='logo-and-download'>
+				<img alt="jQuery++" id="logo" src="images/logo.png"/>
+				<a class='primary' href='https://github.com/downloads/jupiterjs/steal/3.3.zip'>Download v3.3</a>
+			</div>
+		</div>
+		<div class='cf' id='buttons'>
+			<a href='https://forum.javascriptmvc.com/#Forum/stealjs'>Forums</a>
+			<a href='http://bitovi.com/blog/tag/stealjs/'>Blog</a>
+			<a href='https://twitter.com/donejs'>Twitter</a>
+		</div>
+		<div id="inner-menu-wrap">
+			<ul id='menu'></ul>
+		</div>
+		<a href='http://bitovi.com' id='developed-by'>
+		<img alt="Bitovi" src="images/bitovi.png"/>
+		</a>
+	</div>
+	<div id='content-wrapper'>
+		<div id='content'>
+			<a href="http://github.com/jupiterjs/steal" class="github-fork"><img src="images/github.png" alt="Fork me on GitHub"></a>
+			<h1 id='welcome_to_stealjs'>Welcome to StealJS</h1>
+
+<p>StealJS is a collection of command line and JavaScript client utilities that make building, packaging, and sharing JavaScript applications easy.</p>
+
+<p>Behold StealJS&#8217;s goodies:</p>
+
+<h2 id='dependency_management'>Dependency Management</h2>
+
+<p>StealJS loads JS and other file into your app. Features:</p>
+
+<ul>
+<li>Loads JavaScript, CSS, Less, CoffeeScript, and a variety of client-side templates.</li>
+
+<li>Can be use with scripts that don&#8217;t use steal.</li>
+</ul>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>steal</span><span class='p'>(</span><span class='s1'>&#39;widgets/tabs.js&#39;</span><span class='p'>,</span> <span class='s1'>&#39;./style.css&#39;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(){</span>
+  <span class='nx'>$</span><span class='p'>(</span><span class='err'>&#39;#</span><span class='nx'>tabs</span> <span class='p'>).</span><span class='nx'>tabs</span><span class='p'>();</span>
+<span class='p'>});</span>
+</code></pre>
+</div>
+<h2 id='jscss_compression'>JS/CSS Compression</h2>
+
+<p>The <em>steal.build</em> plugin combines an application&#8217;s files into a single minified JavaScript and CSS file extremely easy. Features:</p>
+
+<ul>
+<li>
+<p>Configurable compressors (defaults to Google Closure).</p>
+</li>
+
+<li>
+<p>Compresses Less and CoffeeScript.</p>
+</li>
+
+<li>
+<p>Pre-processes and compresses client-side templates (templates don&#8217;t have to be parsed).</p>
+
+<p>js steal/buildjs mypage.html</p>
+</li>
+</ul>
+
+<h2 id='logging'>Logging</h2>
+
+<p><em>steal.dev</em> logs messages cross browser. Messages are removed in production builds.</p>
+<div class='highlight'><pre><code class='javascript'><span class='nx'>steal</span><span class='p'>.</span><span class='nx'>dev</span><span class='p'>.</span><span class='nx'>log</span><span class='p'>(</span><span class='s1'>&#39;something is happening&#39;</span><span class='p'>);</span>
+</code></pre>
+</div>
+<h2 id='code_generators'>Code Generators</h2>
+
+<p><em>steal.generate</em> makes building code generators extremely easy. Features:</p>
+
+<ul>
+<li>
+<p>Pre-packaged JMVC style code generators.</p>
+</li>
+
+<li>
+<p>Easily author custom generators.</p>
+
+<p>js jquery/generate/app cookbook</p>
+</li>
+</ul>
+
+<h2 id='package_management'>Package Management</h2>
+
+<p><em>steal.get</em> is a simple JavaScript version of <a href='http://rubygems.org/'>ruby gems</a> featuring:</p>
+
+<ul>
+<li>
+<p>Download and install plugins from remote SVN or GIT repositories.</p>
+</li>
+
+<li>
+<p>Installs dependencies.</p>
+
+<p>js steal/getjs http://github.com/jupiterjs/mxui/</p>
+</li>
+</ul>
+
+<h2 id='code_cleaner'>Code Cleaner</h2>
+
+<p><em>steal.clean</em> cleans your code and checks it against JSLint.</p>
+
+<pre><code>js steal/clean path/to/page.html</code></pre>
+
+<h2 id='searchable_ajax_apps'>Searchable Ajax Apps</h2>
+
+<p><em>steal.html</em> makes Google-crawlable html from your ajax app.</p>
+
+<pre><code>js steal/htmljs http://localhost/cookbook.html#recipes</code></pre>
+		</div>
+	</div>
+</div>
+<script src="javascripts/jquery-1.7.1.js" type="text/javascript"></script>
+<script src="javascripts/jquerymx-3.2.custom.js" type="text/javascript"></script>
+<script src="javascripts/application.js" type="text/javascript"></script>
+</body>
+</html>
