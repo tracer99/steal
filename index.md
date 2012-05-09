@@ -95,7 +95,15 @@ steal('todo.css','helper/util.js', function(){
 
 ## steal `steal( resources..., [callback] )`
 
-The core dependency management part of StealJS is `steal`.
+[steal\(\)](http://donejs.com/docs.html#steal) is a function that loads scripts, css, and other
+resources in parallel and calls a callback function when complete.
+
+To load a JavaScript or CSS file, provide the path relative to the folder steal.js is in:
+
+{% highlight javascript %}
+steal('path/to/myfile.js','styles/mystyle.css')
+{% endhighlight %}
+
 
 
 
