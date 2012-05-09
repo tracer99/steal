@@ -13,7 +13,7 @@ applications easy. It provides:
  - [steal crawl](#crawl) - Search-ability for your ajax apps
  - [steal clean](#clean) - Source cleaning / linting
  - [steal generate](#generate) - Boilerplate code generators
- - [steal pluginify] - Release code that doesn't use steal
+ - [steal pluginify](#pluginify) - Release code that doesn't use steal
  - [steal.instrument](#instrument) - Instrumentation for code coverage
  - [steal.amd](#amd) - AMD support for steal
 
