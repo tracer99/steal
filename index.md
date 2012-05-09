@@ -11,10 +11,10 @@ applications easy. It provides:
  - [steal\(\)](#steal) - dependency management for JS, CSS, LESS, CoffeeScript + more.
  - [steal build](#build) - Fast loading (minified, concatenated, progressive) application builds
  - [steal crawl](#crawl) - Search-ability for your ajax apps
- - Source cleaning / linting
- - Boilerplate code generators
- - Instrumentation for code coverage
- - Pluginify
+ - [steal clean](#clean) Source cleaning / linting
+ - [steal generate](#generate) Boilerplate code generators
+ - [steal.instrument](#instrument) Instrumentation for code coverage
+ - [steal pluginify] Release code that doesn't use steal
 
 ## Get StealJS
 
@@ -22,7 +22,7 @@ StealJS is comprised of 2 main parts - `steal.js` (dependency management)
 and `s.js` (everything else).
 
 
-## Dependency Management `steal()`
+## steal `steal( [resources ...], [callback] )`
 
 The core dependency management part of StealJS is `steal`.
 
@@ -85,7 +85,7 @@ steal('todo.css','helper/util.js', function(){
 ### AMD
 
 
-## JS/CSS Compression
+## build `steal build [OPTS] filename.js`
 
 The *steal.build* plugin combines an application's files into a single minified
 JavaScript and CSS file extremely easy.  Features:
@@ -96,7 +96,7 @@ JavaScript and CSS file extremely easy.  Features:
 
 	js steal/buildjs mypage.html
 
-## Logging
+## log `steal.log()`
 
 *steal.dev* logs messages cross browser.  Messages are removed in production builds.
 
