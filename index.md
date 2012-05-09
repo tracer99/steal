@@ -21,21 +21,21 @@ in your project.  In this case, for a basic todo app, your directory layout migh
  - todo-app/
    - todo.html
    - static
-       - todo.js
-       - todo.css
-       - helper/
-          - util.js 
+      - todo.js
+      - todo.css
+      - helper/
+         - util.js 
 
 __Step 1__ : Download __steal.js__ and copy it into the static folder so the "static" folder looks like:
 
  - todo-app/
    - todo.html
    - static
-       - __steal.js__
-       - todo.js
-       - todo.css
-       - helper/
-          - util.js 
+      - __steal.js__
+      - todo.js
+      - todo.css
+      - helper/
+         - util.js 
 
 __Step 2__ : In `todo.html`, add a script tag that loads steal and add a "data-main" attribute
 that points to `todo.js` relative to `steal.js` like:
