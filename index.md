@@ -5,9 +5,22 @@ layout: default
 # Welcome to StealJS
 
 StealJS is a collection of command line and JavaScript client utilities
-that make building, packaging, and sharing JavaScript applications easy.
+that make building, packaging, and sharing JavaScript 
+applications easy. It provides:
 
-Behold StealJS's goodies:
+ - Dependency management for JS, CSS, LESS, CoffeeScript + more.
+ - Fast loading (minified, concatenated, progressive) builds
+ - Search-ability for your ajax apps
+ - Source cleaning / linting
+ - Boilerplate code generators
+ - Instrumentation for code coverage
+ - Pluginify
+
+## Get StealJS
+
+StealJS is comprised of 2 main parts - `steal.js` (dependency management) 
+and `s.js` (everything else).
+
 
 ## Dependency Management `steal()`
 
