@@ -1,0 +1,26 @@
+{
+  "name": "Steal",
+  "description": "Gets JavaScript",
+  "version": "4.0.0",
+  "maintainers": [
+    {
+      "name": "Bitovi",
+      "email": "contact@bitovi.com",
+      "web": "http://bitovi.com/"
+    }
+  ],
+  "dependencies": {
+    "zombie" : "> 1.4.0"
+  },
+  "homepage": "http://donejs.com",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jupiterjs/steal.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/mit-license.php"
+    }
+  ]
+}
