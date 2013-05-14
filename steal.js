@@ -1327,7 +1327,13 @@
 			if (!options.skipCallbacks) {
 				ret = options.fn();
 			}
-			success(ret);
+			if(typeof ret === "object" && ret.done && ret.fail && ret.then){
+				ret.done(function(){
+					success.apply(null, arguments)
+				})
+			} else {
+				success(ret);	
+			}
 		},
 		// request text
 		"text": function (options, success, error) {
@@ -1576,8 +1582,14 @@
 
 							// if this returns a value, we should register it as a module ...
 							if (ret) {
-								// register this module ....
-								cur.value = ret;
+								if(typeof ret === "object" && ret.done && ret.fail && ret.then){
+									ret.then(function(val){
+										cur.value = val;
+									})
+								} else {
+									// register this module ....
+									cur.value = ret;
+								}
 							}
 							return ret;
 						},
