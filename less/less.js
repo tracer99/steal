@@ -74,19 +74,11 @@ steal({id: "./less_engine.js",ignore: true}, function(){
 	 *
 	 */
 	steal.type("less css", function(options, success, error){
-		var pathParts = (options.src+'').split('/');
-		pathParts[pathParts.length - 1] = ''; // Remove filename
 
-		var paths = [];
-		if (!steal.isRhino) {
-			var pathParts = (options.src+'').split('/');
-			pathParts[pathParts.length - 1] = ''; // Remove filename
-			paths = [pathParts.join('/')];
-		}
-		new (less.Parser)({
-            optimization: less.optimization,
-            paths: [pathParts.join('/')]
-        }).parse(options.text, function (e, root) {
+		var env = new less.tree.parseEnv({
+			filename: options.src+''
+		});
+		new (less.Parser)(env).parse(options.text, function (e, root) {
 			options.text = root.toCSS();
 			success();
 		});

@@ -1,5 +1,5 @@
 /*
- * LESS - Leaner CSS v1.4.1
+ * LESS - Leaner CSS v1.4.2
  * http://lesscss.org
  *
  * Copyright (c) 2009-2013, Alexis Sellier
@@ -14,46 +14,6 @@
 function require(arg) {
     return window.less[arg.split('/')[1]];
 };
-
-if(steal.isRhino){
-	Array.isArray = function( obj ) {
-		if( Object.prototype.toString.call( obj ) === '[object Array]' ) {
-		    return true;
-		}
-		return false;
-	}
-	String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
-	  Array.prototype.reduce = function(callback, opt_initialValue){
-	    if (null === this || 'undefined' === typeof this) {
-	      // At the moment all modern browsers, that support strict mode, have
-	      // native implementation of Array.prototype.reduce. For instance, IE8
-	      // does not support strict mode, so this check is actually useless.
-	      throw new TypeError(
-	          'Array.prototype.reduce called on null or undefined');
-	    }
-	    if ('function' !== typeof callback) {
-	      throw new TypeError(callback + ' is not a function');
-	    }
-	    var index = 0, length = this.length >>> 0, value, isValueSet = false;
-	    if (1 < arguments.length) {
-	      value = opt_initialValue;
-	      isValueSet = true;
-	    }
-	    for ( ; length > index; ++index) {
-	      if (!this.hasOwnProperty(index)) continue;
-	      if (isValueSet) {
-	        value = callback(value, this[index], index, this);
-	      } else {
-	        value = this[index];
-	        isValueSet = true;
-	      }
-	    }
-	    if (!isValueSet) {
-	      throw new TypeError('Reduce of empty array with no initial value');
-	    }
-	    return value;
-	  };
-}
 
 var less, tree, charset;
 
@@ -1636,7 +1596,7 @@ less.Parser = function Parser(env) {
             property: function () {
                 var name;
 
-                if (name = $(/^(\*?-?[_a-z0-9-]+)\s*:/)) {
+                if (name = $(/^(\*?-?[_a-zA-Z0-9-]+)\s*:/)) {
                     return name[1];
                 }
             }
@@ -3946,7 +3906,7 @@ tree.Rule.prototype = {
     },
     eval: function (env) {
         var strictMathBypass = false;
-        if (this.name === "font" && env.strictMath === false) {
+        if (this.name === "font" && !env.strictMath) {
             strictMathBypass = true;
             env.strictMath = true;
         }
@@ -5521,7 +5481,7 @@ function extractUrlParts(url, baseUrl) {
     // urlParts[4] = filename
     // urlParts[5] = parameters
 
-    var urlPartsRegex = /^((?:[a-z-]+:)?\/+?(?:[^\/\?#]*\/)|([\/\\]))?((?:[^\/\\\?#]*[\/\\])*)([^\/\\\?#]*)([#\?].*)?$/,
+    var urlPartsRegex = /^((?:[a-z-]+:)?\/+?(?:[^\/\?#]*\/)|([\/\\]))?((?:[^\/\\\?#]*[\/\\])*)([^\/\\\?#]*)([#\?].*)?$/i,
         urlParts = url.match(urlPartsRegex),
         returner = {}, directories = [], i, baseUrlParts;
 
@@ -5542,7 +5502,7 @@ function extractUrlParts(url, baseUrl) {
     }
     
     if (urlParts[3]) {
-        directories = urlParts[3].replace("\\", "/").split("/");
+        directories = urlParts[3].replace(/\\/g, "/").split("/");
 
         // extract out . before .. so .. doesn't absorb a non-directory
         for(i = 0; i < directories.length; i++) {
@@ -5569,7 +5529,6 @@ function extractUrlParts(url, baseUrl) {
 }
 
 function loadStyleSheet(sheet, callback, reload, remaining) {
-
     // sheet may be set to the stylesheet for the initial load or a collection of properties including
     // some env variables for imports
     var hrefParts = extractUrlParts(sheet.href, window.location.href);
@@ -5610,7 +5569,6 @@ function loadStyleSheet(sheet, callback, reload, remaining) {
     xhr(href, sheet.type, function (data, lastModified) {
         // Store data this session
         session_cache += data.replace(/@import .+?;/ig, '');
-
         if (!reload && styles && lastModified &&
            (new(Date)(lastModified).valueOf() ===
             new(Date)(styles.timestamp).valueOf())) {
