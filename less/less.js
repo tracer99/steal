@@ -109,14 +109,56 @@ steal({id: "./less_engine.js",ignore: true}, function(){
 	 *     steal('filename.less')
 	 *
 	 */
+	//used to convert css referencs in one file so they will make sense from prodLocation
+	var convert = function( css, cssLocation, prodLocation ) {
+		//how do we go from prod to css
+		var cssLoc = new steal.File(cssLocation).dir(),
+			newCSS = css.replace(/\@import\s+['"]?([^'"\)]*)['"]?/g, function( whole, part ) {
+				//check if url is relative
+				if (isAbsoluteOrData(part) ) {
+					return whole
+				}
+				//it's a relative path from cssLocation, need to convert to
+				// prodLocation
+				var rootImagePath = steal.URI(cssLoc).join(part),
+					fin = steal.File(prodLocation).pathTo(rootImagePath);
+				return "@import '" + fin + "'";
+			});
+		return newCSS;
+	},
+	isAbsoluteOrData = function( part ) {
+		return /^(data:|http:\/\/|https:\/\/|\/)/.test(part)
+	};
+	var lastFn,
+		files = {},
+		abortFn,
+		totalTxt = "";
 	steal.type("less css", function(options, success, error){
 
-		var env = new less.tree.parseEnv({
-			filename: options.src+''
-		});
-		new (less.Parser)(env).parse(options.text, function (e, root) {
-			options.text = root.toCSS();
+		totalTxt += convert(options.text, options.src+'', steal.URI(steal.config().startId).dir());
+		if(lastFn){ // something else came first
+			clearTimeout(lastFn) // clear previous timeout
+			abortFn();
+		}
+		// if 30ms elapses without another less file, run the parser
+		lastFn = setTimeout(function(){
+			// console.log('new lastFn');
+			files = {};
+			var env = new less.tree.parseEnv({
+				filename: steal.config().startId,
+				files: files
+			});
+			new (less.Parser)(env).parse(totalTxt, function (e, root) {
+				options.text = root.toCSS();
+				success();
+				// reset
+				totalTxt = "";
+			});
+		}, 30);
+		// call this if we're not the last fn
+		abortFn = function(){
+			options.text = "";
 			success();
-		});
+		}
 	});
 })

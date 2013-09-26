@@ -1604,6 +1604,8 @@ less.Parser = function Parser(env) {
     };
 };
 
+var currentImports = {};
+
 if (less.mode === 'browser' || less.mode === 'rhino') {
     //
     // Used by `@import` directives
@@ -5529,6 +5531,7 @@ function extractUrlParts(url, baseUrl) {
 }
 
 function loadStyleSheet(sheet, callback, reload, remaining) {
+    // console.log('loading', sheet)
     // sheet may be set to the stylesheet for the initial load or a collection of properties including
     // some env variables for imports
     var hrefParts = extractUrlParts(sheet.href, window.location.href);

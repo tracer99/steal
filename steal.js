@@ -685,12 +685,20 @@ h.extend(URI.prototype, {
 	 */
 	pathTo: function( uri ) {
 		uri = URI(uri);
+		// uri is absolute, but "this" is relative
+		if(uri.protocol && !this.protocol){
+			return uri+"";
+		}
 		var uriParts = uri.path.split("/"),
 			thisParts = this.path.split("/"),
 			result = [];
 		while ( uriParts.length && thisParts.length && uriParts[0] == thisParts[0] ) {
 			uriParts.shift();
 			thisParts.shift();
+		}
+		// same directory
+		if(uriParts.length === 1 && thisParts.length === 1){
+			return uriParts.join("/");
 		}
 		h.each(thisParts, function() {
 			result.push("../")
