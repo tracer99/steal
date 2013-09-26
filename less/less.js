@@ -133,9 +133,8 @@ steal({id: "./less_engine.js",ignore: true}, function(){
 		files = {},
 		contents = {},
 		abortFn,
-		totalTxt = "",;
+		totalTxt = "";
 	steal.type("less css", function(options, success, error){
-
 		totalTxt += convert(options.text, options.src+'', steal.URI(steal.config().startId).dir());
 		if(lastFn){ // something else came first
 			clearTimeout(lastFn) // clear previous timeout
@@ -149,18 +148,13 @@ steal({id: "./less_engine.js",ignore: true}, function(){
 				files: files,
 				contents: contents
 			});
-			// console.log('lastFn', totalTxt)
 			new (less.Parser)(env).parse(totalTxt, function (e, root) {
 				options.text = root.toCSS();
-				// console.log('finish it', options.text)
-				success();
 			});
-			// reset
-			totalTxt = "";
+			success();
 		}, 30);
 		// call this if we're not the last fn
 		abortFn = function(){
-			// console.log('aborting', options.src+'')
 			options.text = "";
 			success();
 		}
