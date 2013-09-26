@@ -106,7 +106,6 @@ less.Parser = function Parser(env) {
                 parserImporter.queue.splice(parserImporter.queue.indexOf(path), 1); // Remove the path from the queue
 
                 var imported = fullPath in parserImporter.files;
-
                 parserImporter.files[fullPath] = root;                        // Store the root
 
                 if (e && !parserImporter.error) { parserImporter.error = e; }
@@ -5568,8 +5567,7 @@ function loadStyleSheet(sheet, callback, reload, remaining) {
             newFileInfo.rootpath = hrefParts.path;
         }
     }
-
-    xhr(href, sheet.type, function (data, lastModified) {
+    var successFunc = function (data, lastModified) {
         // Store data this session
         session_cache += data.replace(/@import .+?;/ig, '');
         if (!reload && styles && lastModified &&
@@ -5603,7 +5601,11 @@ function loadStyleSheet(sheet, callback, reload, remaining) {
                 callback(e, null, null, sheet);
             }
         }
-    }, function (status, url) {
+    };
+    if(env.contents[href]){
+        return successFunc(env.contents[href])
+    }
+    xhr(href, sheet.type, successFunc, function (status, url) {
         callback({ type: 'File', message: "'" + url + "' wasn't found (" + status + ")" }, null, null, sheet);
     });
 }

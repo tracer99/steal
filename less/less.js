@@ -131,8 +131,9 @@ steal({id: "./less_engine.js",ignore: true}, function(){
 	};
 	var lastFn,
 		files = {},
+		contents = {},
 		abortFn,
-		totalTxt = "";
+		totalTxt = "",;
 	steal.type("less css", function(options, success, error){
 
 		totalTxt += convert(options.text, options.src+'', steal.URI(steal.config().startId).dir());
@@ -142,21 +143,24 @@ steal({id: "./less_engine.js",ignore: true}, function(){
 		}
 		// if 30ms elapses without another less file, run the parser
 		lastFn = setTimeout(function(){
-			// console.log('new lastFn');
 			files = {};
 			var env = new less.tree.parseEnv({
 				filename: steal.config().startId,
-				files: files
+				files: files,
+				contents: contents
 			});
+			// console.log('lastFn', totalTxt)
 			new (less.Parser)(env).parse(totalTxt, function (e, root) {
 				options.text = root.toCSS();
+				// console.log('finish it', options.text)
 				success();
-				// reset
-				totalTxt = "";
 			});
+			// reset
+			totalTxt = "";
 		}, 30);
 		// call this if we're not the last fn
 		abortFn = function(){
+			// console.log('aborting', options.src+'')
 			options.text = "";
 			success();
 		}
