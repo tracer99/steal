@@ -133,30 +133,45 @@ steal({id: "./less_engine.js",ignore: true}, function(){
 		files = {},
 		contents = {},
 		abortFn,
-		totalTxt = "";
+		totalTxt = "",
+		bound = false;
+	var createCSS = function(cssText){
+		var css = document.createElement("style");
+		css.type = "text/css";
+		if ( css.styleSheet ) { // IE
+			css.styleSheet.cssText = cssText;
+		} else {
+			(function( node ) {
+				if ( css.childNodes.length ) {
+					if ( css.firstChild.nodeValue !== node.nodeValue ) {
+						css.replaceChild(node, css.firstChild);
+					}
+				} else {
+					css.appendChild(node);
+				}
+			})(document.createTextNode(cssText));
+		}
+		document.getElementsByTagName("head")[0].appendChild(css);
+	}
 	steal.type("less css", function(options, success, error){
 		totalTxt += convert(options.text, options.src+'', steal.URI(steal.config().startId).dir());
-		if(lastFn){ // something else came first
-			clearTimeout(lastFn) // clear previous timeout
-			abortFn();
-		}
-		// if 30ms elapses without another less file, run the parser
-		lastFn = setTimeout(function(){
-			files = {};
-			var env = new less.tree.parseEnv({
-				filename: steal.config().startId,
-				files: files,
-				contents: contents
-			});
-			new (less.Parser)(env).parse(totalTxt, function (e, root) {
-				options.text = root.toCSS();
-			});
-			success();
-		}, 30);
-		// call this if we're not the last fn
-		abortFn = function(){
-			options.text = "";
-			success();
-		}
+		if(!bound){
+			bound = true;
+			steal.one("end", function(){
+				files = {};
+				var env = new less.tree.parseEnv({
+					filename: steal.config().startId,
+					files: files,
+					contents: contents
+				});
+				// worker thread?
+				new (less.Parser)(env).parse(totalTxt, function (e, root) {
+					options.text = root.toCSS();
+					createCSS(options.text);
+				});
+			})
+		} 
+		options.text = "";
+		success();
 	});
 })
