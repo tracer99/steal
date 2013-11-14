@@ -193,18 +193,20 @@ var h = {
 	stealCheck : /steal\.(production\.)?js.*/,
 	// get script that loaded steal 
 	getStealScriptSrc : function() {
+		var scripts, script;
 		if (!h.doc ) {
-			return;
+			script = {
+				src : h.win.location.href
+			};
+		}else{
+			scripts = h.getElementsByTagName("script")
+			// find the steal script and setup initial paths.
+			h.each(scripts, function( i, s ) {
+				if ( h.stealCheck.test(s.src) ) {
+					script = s;
+				}
+			});
 		}
-		var scripts = h.getElementsByTagName("script"),
-			script;
-
-		// find the steal script and setup initial paths.
-		h.each(scripts, function( i, s ) {
-			if ( h.stealCheck.test(s.src) ) {
-				script = s;
-			}
-		});
 		return script;
 	},
 	inArray : function( arr, val ){
@@ -917,6 +919,7 @@ h.extend(ConfigManager.prototype, {
 			this.stealConfig.root = root;
 			return this;
 		}
+
 		this.stealConfig.root =  root || URI("");
 	},
 	//var stealConfig = configs[configContext];
@@ -1301,58 +1304,75 @@ var cssCount = 0,
 // Apply all the basic types
 ConfigManager.defaults.types = {
 	"js": function( options, success, error ) {
-		// create a script tag
-		var script = h.scriptTag(),
-			callback = function() {
-				if (!script.readyState || stateCheck.test(script.readyState) ) {
-					cleanUp(script);
-					success();
-				}
-			}, errorTimeout;
-		// if we have text, just set and insert text
-		if ( options.text ) {
-			// insert
-			script.text = options.text;
+		var host,fileUri,fileHost;
 
-		} else {
-			var src = options.src; //st.idToUri( options.id );
-			// If we're in IE older than IE9 we need to use
-			// onreadystatechange to determine when javascript file
-			// is loaded. Unfortunately this makes it impossible to
-			// call teh error callback, because it will return 
-			// loaded or completed for the script even if it 
-			// encountered the 404 error
-			if(h.useIEShim){
-				script.onreadystatechange = function(){
-					if (stateCheck.test(script.readyState)) {
+		host = steal.config('root').host;
+		fileUri = options.idToUri(options.id);
+		fileHost = fileUri.host;
+
+		if(host === fileHost && options.type === "js"){
+			h.request({
+				contentType : 'application/javascript',
+				src : fileUri.toString()
+			},function(result){
+				options.text = result;
+				h.win.eval(result);
+				success();
+			})
+		}else{
+			// create a script tag
+			var script = h.scriptTag(),
+				callback = function() {
+					if (!script.readyState || stateCheck.test(script.readyState) ) {
+						cleanUp(script);
 						success();
 					}
-				}
+				}, errorTimeout;
+			// if we have text, just set and insert text
+			if ( options.text ) {
+				// insert
+				script.text = options.text;
+
 			} else {
-				script.onload = callback;
-				// error handling doesn't work on firefox on the filesystem
-				if ( h.support.error && error && src.protocol !== "file" ) {
-					script.onerror = error;
+				var src = options.src; //st.idToUri( options.id );
+				// If we're in IE older than IE9 we need to use
+				// onreadystatechange to determine when javascript file
+				// is loaded. Unfortunately this makes it impossible to
+				// call teh error callback, because it will return
+				// loaded or completed for the script even if it
+				// encountered the 404 error
+				if(h.useIEShim){
+					script.onreadystatechange = function(){
+						if (stateCheck.test(script.readyState)) {
+							success();
+						}
+					}
+				} else {
+					script.onload = callback;
+					// error handling doesn't work on firefox on the filesystem
+					if ( h.support.error && error && src.protocol !== "file" ) {
+						script.onerror = error;
+					}
 				}
+
+				// listen to loaded
+				// IE will change the src property to a full domain.
+				// For example, if you set it to 'foo.js', when grabbing src it will be "http://localhost/foo.js".
+				// We set the id property so later references to this script will have the same path.
+				script.src = script.id = "" + src;
+				//script.src = options.src = addSuffix(options.src);
+				//script.async = false;
+				script.onSuccess = success;
 			}
 
-			// listen to loaded
-			// IE will change the src property to a full domain.
-			// For example, if you set it to 'foo.js', when grabbing src it will be "http://localhost/foo.js".
-			// We set the id property so later references to this script will have the same path.
-			script.src = script.id = "" + src;
-			//script.src = options.src = addSuffix(options.src);
-			//script.async = false;
-			script.onSuccess = success;
-		}
+			// insert the script
+			lastInserted = script;
+			h.head().insertBefore(script, h.head().firstChild);
 
-		// insert the script
-		lastInserted = script;
-		h.head().insertBefore(script, h.head().firstChild);
-
-		// if text, just call success right away, and clean up
-		if ( options.text ) {
-			callback();
+			// if text, just call success right away, and clean up
+			if ( options.text ) {
+				callback();
+			}
 		}
 	},
 	"fn": function( options, success ) {
@@ -3241,6 +3261,11 @@ h.addEvent(h.win, "load", function() {
 	loaded.load.resolve();
 });
 
+if(h.win.document === undefined){
+	loaded.load.resolve();
+	h.win.window = h.win.self;
+}
+
 st.one("end", function( collection ) {
 	loaded.end.resolve(collection);
 	firstEnd = collection;
@@ -3298,6 +3323,8 @@ startup = h.after(startup, function() {
 		steals.push.apply(steals, h.isString(options.startIds) ? [options.startIds] : options.startIds)
 		options.startIds = steals.slice(0)
 	}
+
+	//throw JSON.stringify(config.attr())
 
 	// we only load things with force = true
 	if ( config.attr().env == "production" && config.attr().loadProduction && config.attr().productionId ) {

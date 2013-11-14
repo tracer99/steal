@@ -170,6 +170,11 @@ h.addEvent(h.win, "load", function() {
 	loaded.load.resolve();
 });
 
+if(h.win.document === undefined){
+	loaded.load.resolve();
+	h.win.window = h.win.self;
+}
+
 st.one("end", function( collection ) {
 	loaded.end.resolve(collection);
 	firstEnd = collection;
