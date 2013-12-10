@@ -199,7 +199,7 @@ st.events.done = {
 	}
 };
 
-h.win.startup = h.after(h.win.startup, function() {
+startup = h.after(startup, function() {
 	// get options from 
 	var urlOptions = st.getScriptOptions();
 	// A: GET OPTIONS

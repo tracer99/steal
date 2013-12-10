@@ -162,15 +162,16 @@ ConfigManager.defaults.types = {
 		fileUri = options.idToUri(options.id);
 		fileHost = fileUri.host;
 
-		if(host === fileHost && options.type === "js" && !steal.isRhino){
+		//only load JS this way outside of rhino, and only if it is JS. the 'js' type also loads mustache files..
+		if(!steal.isRhino && (host === fileHost) && (options.type === "js")){
 			h.request({
 				contentType : 'application/javascript',
-				src : fileUri.toString()
+				src : "" +fileUri
 			},function(result){
 				options.text = result;
 				h.win.eval(result);
 				success();
-			})
+			});
 		}else{
 			// create a script tag
 			var script = h.scriptTag(),
@@ -186,7 +187,6 @@ ConfigManager.defaults.types = {
 				script.text = options.text;
 
 			} else {
-				var src = options.src; //st.idToUri( options.id );
 				// If we're in IE older than IE9 we need to use
 				// onreadystatechange to determine when javascript file
 				// is loaded. Unfortunately this makes it impossible to
@@ -198,11 +198,11 @@ ConfigManager.defaults.types = {
 						if (stateCheck.test(script.readyState)) {
 							success();
 						}
-					}
+					};
 				} else {
 					script.onload = callback;
 					// error handling doesn't work on firefox on the filesystem
-					if ( h.support.error && error && src.protocol !== "file" ) {
+					if ( h.support.error && error && fileUri.protocol !== "file" ) {
 						script.onerror = error;
 					}
 				}
@@ -211,7 +211,7 @@ ConfigManager.defaults.types = {
 				// IE will change the src property to a full domain.
 				// For example, if you set it to 'foo.js', when grabbing src it will be "http://localhost/foo.js".
 				// We set the id property so later references to this script will have the same path.
-				script.src = script.id = "" + src;
+				script.src = script.id = "" + fileUri;
 				//script.src = options.src = addSuffix(options.src);
 				//script.async = false;
 				script.onSuccess = success;

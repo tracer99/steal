@@ -173,7 +173,7 @@ var h = {
 	// get script that loaded steal 
 	getStealScriptSrc : function() {
 		var scripts, script;
-		if(steal.isRhino){
+		if(steal.isRhino && !h.doc){
 			return;
 		}
 		else if (!h.doc) {
@@ -181,7 +181,7 @@ var h = {
 				src : h.win.location.href
 			};
 		}else{
-			scripts = h.getElementsByTagName("script")
+			scripts = h.getElementsByTagName("script");
 			// find the steal script and setup initial paths.
 			h.each(scripts, function( i, s ) {
 				if ( h.stealCheck.test(s.src) ) {
