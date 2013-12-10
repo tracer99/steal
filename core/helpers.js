@@ -173,7 +173,10 @@ var h = {
 	// get script that loaded steal 
 	getStealScriptSrc : function() {
 		var scripts, script;
-		if (!h.doc ) {
+		if(steal.isRhino){
+			return;
+		}
+		else if (!h.doc) {
 			script = {
 				src : h.win.location.href
 			};

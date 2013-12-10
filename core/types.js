@@ -1,3 +1,4 @@
+/*global h,ConfigManager*/
 // ### TYPES ##
 /**
  * @function steal.config.types
@@ -101,14 +102,14 @@ ConfigManager.prototype.require = function( options, success, error) {
 		converters = [options.type]
 	}
 	require(options, converters, success, error, this)
-}
+};
 ConfigManager.prototype.addSuffix = function( str ) {
 	var suffix = this.attr('suffix')
 	if ( suffix ) {
 		str = (str + '').indexOf('?') > -1 ? str + "&" + suffix : str + "?" + suffix;
 	}
 	return str;
-}
+};
 
 // Require function. It will be called recursevly until all 
 // converters are ran. After that `success` callback is ran.
@@ -122,12 +123,12 @@ function require(options, converters, success, error, config) {
 	type.require(options, function require_continue_check() {
 		// if we have more types to convert
 		if ( converters.length ) {
-			require(options, converters, success, error, config)
+			require(options, converters, success, error, config);
 		} else { // otherwise this is the final
 			success.apply(this, arguments);
 		}
-	}, error, config)
-};
+	}, error, config);
+}
 
 
 
@@ -161,7 +162,7 @@ ConfigManager.defaults.types = {
 		fileUri = options.idToUri(options.id);
 		fileHost = fileUri.host;
 
-		if(host === fileHost && options.type === "js"){
+		if(host === fileHost && options.type === "js" && !steal.isRhino){
 			h.request({
 				contentType : 'application/javascript',
 				src : fileUri.toString()
