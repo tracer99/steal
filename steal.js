@@ -1315,7 +1315,7 @@ ConfigManager.defaults.types = {
 		fileHost = fileUri.host;
 
 		//only load JS this way outside of rhino, and only if it is JS. the 'js' type also loads mustache files..
-		if(!steal.isRhino && (host === fileHost) && (options.type === "js")){
+		if(!steal.isRhino && !h.doc && (options.type === "js")){
 			h.request({
 				contentType : 'application/javascript',
 				src : "" +fileUri
