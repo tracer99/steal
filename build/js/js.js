@@ -192,7 +192,7 @@ steal('steal','steal/build/css',function( steal ) {
 			} else if(file.buildType == 'less'){
 				csses.push(file)
 			}
-		})
+		});
 		// add to dependencies
 		if(csses.length && dependencies){
 			dependencies[cssPackage] = csses.map(function(css){
@@ -228,7 +228,7 @@ steal('steal','steal/build/css',function( steal ) {
 		
 		code.push("steal.pushPending()")
 		
-		lineNum += code.length
+		lineNum += code.length;
 		// add js code
 		jses.forEach(function(file){
 			

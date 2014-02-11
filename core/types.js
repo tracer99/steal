@@ -172,6 +172,13 @@ ConfigManager.defaults.types = {
 				h.win.eval(result);
 				success();
 			});
+		}else if(steal.isRhino){
+			fileUri = options.idToUri(options.id,true);
+			if((options.type !== "mustache") && (options.type !== "ejs")){
+				options.text = readFile(fileUri);
+				eval.call(null,options.text);
+			}
+			success();
 		}else{
 			// create a script tag
 			var script = h.scriptTag(),
@@ -236,10 +243,16 @@ ConfigManager.defaults.types = {
 	},
 	// request text
 	"text": function( options, success, error ) {
-		h.request(options, function( text ) {
-			options.text = text;
-			success(text);
-		}, error)
+		//do not load source for less files
+		if(options.type !== "less"){
+			options.contentType = "text/plain";
+			h.request(options, function( text ) {
+				options.text = text;
+				success(text);
+			}, error)
+		}else{
+			success("");
+		}
 	},
 	// loads css files and works around IE's 31 sheet limit
 	"css": function (options, success, error) {

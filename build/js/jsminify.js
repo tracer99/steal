@@ -85,18 +85,55 @@ steal('steal','steal/parse',function(steal, parse){
 		// return source;
 		// get the compressor
 		options = options || {};
-		var compressor = js.minifiers[options.compressor || "localClosure"]()
+		var compressor = js.minifiers[options.compressor || "nodeUglify"]();
 		
 		if(source){
 			// return source+""; //""+compressor( source, true, options.currentLineMap )
 			return ""+compressor( source, true, options.currentLineMap )
 		} else {
-			return  compressor
+			return compressor
 		}
-	}
+	};
 
 	//various minifiers
 	js.minifiers = {
+		nodeUglify : function(){
+
+			return function( src ) {
+				steal.print("steal.compress - Using UglifyJS via NPM");
+				var rnd = Math.floor(Math.random() * 1000000 + 1),
+					filename = "tmp" + rnd + ".js",
+					oFilename = filename + '.out',
+					tmpfile = new steal.URI(filename),
+					outfile = new steal.URI(oFilename),
+					outputString;
+
+				var options = {
+					err : ''
+				};
+
+				tmpfile.save(src);
+
+				runCommand("steal/node_modules/uglify-js/bin/uglifyjs",
+					"--lift-vars",
+					"--unsafe",
+					"--mangle-toplevel",
+					"--reserved-names \"steal\"",
+					"-o",oFilename, filename, options);
+
+				if(options.err.length>0){
+					print(options.err);
+				}
+
+				outputString = readFile(oFilename);
+
+				tmpfile.remove();
+				outfile.remove();
+
+				return outputString;
+
+			};
+		},
 		// needs shrinksafe.jar at steal/build/javascripts/shrinksafe.jar
 		shrinksafe: function() {
 			steal.print("steal.compress - Using ShrinkSafe");
@@ -149,7 +186,6 @@ steal('steal','steal/parse',function(steal, parse){
 
 				origFile.save(src);
 
-
 				var outBaos = new java.io.ByteArrayOutputStream(),
 					output = new java.io.PrintStream(outBaos);
 					
@@ -168,22 +204,23 @@ steal('steal','steal/parse',function(steal, parse){
 			return function( src, quiet, currentLineMap ) {
 				var rnd = Math.floor(Math.random() * 1000000 + 1),
 					filename = "tmp" + rnd + ".js",
-					tmpFile = new steal.URI(filename);
+					oFilename = filename + '.out',
+					tmpfile = new steal.URI(filename),
+					outfile = new steal.URI(oFilename),
+					outputString;
 
-				tmpFile.save(src);
+				tmpfile.save(src);
 
-				var outBaos = new java.io.ByteArrayOutputStream(),
-					output = new java.io.PrintStream(outBaos),
-					options = {
-						err: '',
-						output: output
-					};
+				var options = {
+					err : ''
+				};
+
 				if ( quiet ) {
 					runCommand("java", "-jar", "steal/build/js/compiler.jar", "--compilation_level", "SIMPLE_OPTIMIZATIONS", 
-						"--warning_level", "QUIET", "--js", filename, options);
+						"--warning_level", "QUIET", "--js", filename, "--js_output_file",oFilename, options);
 				} else {
 					runCommand("java", "-jar", "steal/build/js/compiler.jar", "--compilation_level", "SIMPLE_OPTIMIZATIONS", 
-						"--js", filename, options);
+						"--js", filename, "--js_output_file", oFilename, options);
 				}
 				// print(options.err);
 				// if there's an error, go through the lines and find the right location
@@ -226,8 +263,11 @@ steal('steal','steal/parse',function(steal, parse){
 						}
 					}
 				}
-				tmpFile.remove();
-				return ""+outBaos.toString();
+				tmpfile.remove();
+				outputString = readFile(oFilename,"utf-8");
+				outfile.remove();
+
+				return outputString;
 			};
 		},
 		yui: function() {

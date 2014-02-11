@@ -77,9 +77,7 @@ steal('steal',
 					}
 				},
 				filterCode = function(code, type) {
-					return buildOptions.minify
-						? build[type].minify(code)
-						: code;
+					return code;
 				};
 			
 			// make the packages folder
