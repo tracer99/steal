@@ -1377,6 +1377,34 @@ function logloads(loads) {
     }
     return -1;
   };
+	// taken from https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+	// Production steps of ECMA-262, Edition 5, 15.4.4.17
+	// Reference: http://es5.github.io/#x15.4.4.17
+	if (!Array.prototype.some) {
+	  Array.prototype.some = function(fun/*, thisArg*/) {
+		'use strict';
+
+		if (this == null) {
+		  throw new TypeError('Array.prototype.some called on null or undefined');
+		}
+
+		if (typeof fun !== 'function') {
+		  throw new TypeError();
+		}
+
+		var t = Object(this);
+		var len = t.length >>> 0;
+
+		var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+		for (var i = 0; i < len; i++) {
+		  if (i in t && fun.call(thisArg, t[i], i, t)) {
+			return true;
+		  }
+		}
+
+		return false;
+	  };
+	}
   var defineProperty = $__Object$defineProperty;
 
   // 15.2.3 - Runtime Semantics: Loader State
@@ -3694,8 +3722,11 @@ function global(loader) {
         for (var i = 0; i < deps.length; i++) {
           var moduleGlobal = moduleGlobals[deps[i]];
           if (moduleGlobal)
-            for (var m in moduleGlobal)
-              loader.global[m] = moduleGlobal[m];
+            for (var m in moduleGlobal) {
+				try {	
+				  loader.global[m] = moduleGlobal[m];
+				} catch(e){}
+			}
         }
 
         // now store a complete copy of the global object
